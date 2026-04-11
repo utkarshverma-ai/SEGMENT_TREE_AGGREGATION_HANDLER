@@ -32,3 +32,8 @@ Thumbs.db
 
 # Stale duplicate folder from pre-cleanup layout
 segment-tree-handler/
+
+# Vercel
+.vercel/
+.output/
+.next/
