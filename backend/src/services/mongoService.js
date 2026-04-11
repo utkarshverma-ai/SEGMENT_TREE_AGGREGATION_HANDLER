@@ -6,8 +6,31 @@ class MongoService {
     return mongoose.connection.readyState === 1;
   }
 
+  async ensureConnected() {
+    if (this.isConnected()) {
+      return true;
+    }
+
+    try {
+      const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
+      if (!mongoUri) {
+        return false;
+      }
+
+      await mongoose.connect(mongoUri, {
+        connectTimeoutMS: 5000,
+        socketTimeoutMS: 5000
+      });
+      return true;
+    } catch (error) {
+      console.error('MongoDB connection failed:', error.message);
+      return false;
+    }
+  }
+
   async queryRange(l, r) {
-    if (!this.isConnected()) {
+    const connected = await this.ensureConnected();
+    if (!connected) {
       return { success: false, error: 'MongoDB is not connected' };
     }
 
@@ -38,7 +61,8 @@ class MongoService {
   }
 
   async setArray(arr) {
-    if (!this.isConnected()) {
+    const connected = await this.ensureConnected();
+    if (!connected) {
       return { success: false, error: 'MongoDB is not connected' };
     }
 
@@ -54,7 +78,8 @@ class MongoService {
   }
 
   async updateRange(l, r, val) {
-    if (!this.isConnected()) {
+    const connected = await this.ensureConnected();
+    if (!connected) {
       return { success: false, error: 'MongoDB is not connected' };
     }
 
@@ -71,7 +96,8 @@ class MongoService {
   }
 
   async getAll() {
-    if (!this.isConnected()) {
+    const connected = await this.ensureConnected();
+    if (!connected) {
       return [];
     }
 
@@ -80,7 +106,8 @@ class MongoService {
   }
 
   async getCount() {
-    if (!this.isConnected()) {
+    const connected = await this.ensureConnected();
+    if (!connected) {
       return 0;
     }
 
