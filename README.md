@@ -5,7 +5,7 @@ A cleaned full-stack project for range aggregation using a segment tree with laz
 ## Project Structure
 
 ```text
-.
+
 ├── backend
 │   ├── src
 │   │   ├── config
@@ -104,3 +104,4 @@ Run the periodic tree rebuild script from the repository root:
 ```bash
 ./scripts/rebuildTree.sh --once
 ```
+
